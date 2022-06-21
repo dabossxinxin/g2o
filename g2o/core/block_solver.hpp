@@ -533,7 +533,6 @@ namespace g2o {
 		return false;
 	}
 
-
 	template <typename Traits>
 	bool BlockSolver<Traits>::setLambda(number_t lambda, bool backup)
 	{

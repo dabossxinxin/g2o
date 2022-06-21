@@ -36,56 +36,90 @@ namespace g2o {
 
 	class BlockSolverBase;
 
-	/**
-	 * \brief Implementation of Powell's Dogleg Algorithm
-	 */
+	/*!
+	*  @brief Levenberg_Marquart策略实现类
+	*/
 	class G2O_CORE_API OptimizationAlgorithmDogleg : public OptimizationAlgorithmWithHessian
 	{
 	public:
-		/** \brief type of the step to take */
+		/*!< @brief 步长类型 */
 		enum {
+			/*!< @brief 未定义的步长 */
 			STEP_UNDEFINED,
+			/*!< @brief 最速下降步长 */
 			STEP_SD,
+			/*!< @brief 高斯牛顿步长 */
 			STEP_GN,
+			/*!< @brief DogLeg步长 */
 			STEP_DL
 		};
 
 	public:
-		/**
-		 * construct the Dogleg algorithm, which will use the given Solver for solving the
-		 * linearized system.
-		 */
+
+		/*!
+		*  @brief 使用指定的求解器初始化Dog-Leg策略
+		*  @param[in]	solver	用户指定的求解器
+		*/
 		explicit OptimizationAlgorithmDogleg(std::unique_ptr<BlockSolverBase> solver);
 		virtual ~OptimizationAlgorithmDogleg();
 
+		/*!
+		*  @brief 当前迭代的求解优化问题
+		*  @param[in]	iteration	当前迭代
+		*  @param[in]	online		TODO
+		*/
 		virtual SolverResult solve(int iteration, bool online = false);
 
+		/*!
+		*  @brief 打印优化迭代过程中的调试信息
+		*  @param[in]	os	信息输出流
+		*/
 		virtual void printVerbose(std::ostream& os) const;
 
-		//! return the type of the last step taken by the algorithm
+		/*!
+		*  @brief 获取迭代中最后一步采用的步长类型
+		*  @return	int	步长类型
+		*/
 		int lastStep() const { return _lastStep; }
 		//! return the diameter of the trust region
+
+		/*!
+		*  @brief 获取当前迭代中置信域大小
+		*  @return	number_t	置信域大小
+		*/
 		number_t trustRegion() const { return _delta; }
 
-		//! convert the type into an integer
+		/*!
+		*  @brief 将迭代类型转化为字符串类型
+		*  @param[in]	stepType	步长类型（整型）
+		*  @return		char*		步长类型（字符串）
+		*/
 		static const char* stepType2Str(int stepType);
 
 	protected:
-		// parameters
+		/*!< @brief 一次迭代中使chi2下降的最大尝试次数 */
 		Property<int>* _maxTrialsAfterFailure;
+		/*!< @brief 用户设置的置信域初始值 */
 		Property<number_t>* _userDeltaInit;
-		// damping to enforce positive definite matrix
+		/*!< @brief 用来保证Hessian矩阵为正定矩阵的初始阻尼因子 */
 		Property<number_t>* _initialLambda;
+		/*!< @brief 用来保证Hessian矩阵为正定矩阵的阻尼因子 */
 		Property<number_t>* _lamdbaFactor;
 
-		VectorX _hsd;         ///< steepest decent step
-		VectorX _hdl;         ///< final dogleg step
+		/*!< @brief 当前迭代最速下降步长 */
+		VectorX _hsd;
+		/*!< @brief 当前迭代DogLeg下降步长 */
+		VectorX _hdl;
 		VectorX _auxVector;   ///< auxilary vector used to perform multiplications or other stuff
 
-		number_t _currentLambda;        ///< the damping factor to force positive definite matrix
-		number_t _delta;                ///< trust region
-		int _lastStep;                ///< type of the step taken by the algorithm
+		/*!< @brief 当前迭代阻尼因子 */
+		number_t _currentLambda;
+		/*!< @brief 当前迭代置信域直径 */
+		number_t _delta;
+		/*!< @brief 优化程序采用的步长类型 */
+		int _lastStep;
 		bool _wasPDInAllIterations;   ///< the matrix we solve was positive definite in all iterations -> if not apply damping
+		/*!< @brief 当前迭代为使chi2下降的尝试次数 */
 		int _lastNumTries;
 
 	private:

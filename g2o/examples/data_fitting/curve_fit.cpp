@@ -164,7 +164,7 @@ int main(int argc, char** argv)
 	g2o::OptimizationAlgorithmDogleg* solver_dl = new g2o::OptimizationAlgorithmDogleg(
 		g2o::make_unique<MyBlockSolver>(g2o::make_unique<MyLinearSolver>()));
 
-	optimizer.setAlgorithm(solver_lm);
+	optimizer.setAlgorithm(solver_dl);
 
 	// build the optimization problem given the points
 	// 1. add the parameter vertex

@@ -688,6 +688,6 @@ int main(int argc, char** argv)
   //Factory::destroy();
   //OptimizationAlgorithmFactory::destroy();
   //HyperGraphActionLibrary::destroy();
-
+  system("pause");
   return 0;
 }
