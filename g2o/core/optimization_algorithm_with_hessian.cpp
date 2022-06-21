@@ -1,4 +1,4 @@
-// g2o - General Graph Optimization
+﻿// g2o - General Graph Optimization
 // Copyright (C) 2011 R. Kuemmerle, G. Grisetti, W. Burgard
 // All rights reserved.
 //
@@ -35,66 +35,70 @@ using namespace std;
 
 namespace g2o {
 
-  OptimizationAlgorithmWithHessian::OptimizationAlgorithmWithHessian(Solver& solver) :
-    OptimizationAlgorithm(),
-    _solver(solver)
-  {
-    _writeDebug = _properties.makeProperty<Property<bool> >("writeDebug", true);
-  }
+	OptimizationAlgorithmWithHessian::OptimizationAlgorithmWithHessian(Solver& solver) :
+		OptimizationAlgorithm(),
+		_solver(solver)
+	{
+		_writeDebug = _properties.makeProperty<Property<bool> >("writeDebug", true);
+	}
 
-  OptimizationAlgorithmWithHessian::~OptimizationAlgorithmWithHessian()
-  {}
+	OptimizationAlgorithmWithHessian::~OptimizationAlgorithmWithHessian()
+	{}
 
-  bool OptimizationAlgorithmWithHessian::init(bool online)
-  {
-    assert(_optimizer && "_optimizer not set");
-    _solver.setWriteDebug(_writeDebug->value());
-    bool useSchur=false;
-    for (OptimizableGraph::VertexContainer::const_iterator it=_optimizer->activeVertices().begin(); it!=_optimizer->activeVertices().end(); ++it) {
-      OptimizableGraph::Vertex* v= *it;
-      if (v->marginalized()){
-        useSchur=true;
-        break;
-      }
-    }
-    if (useSchur)
-    {
-      if  (_solver.supportsSchur())
-        _solver.setSchur(true);
-    }
-    else
-    {
-      if  (_solver.supportsSchur())
-        _solver.setSchur(false);
-    }
+	bool OptimizationAlgorithmWithHessian::init(bool online)
+	{
+		assert(_optimizer && "_optimizer not set");
+		_solver.setWriteDebug(_writeDebug->value());
+		bool useSchur = false;
 
-    bool initState = _solver.init(_optimizer, online);
-    return initState;
-  }
+		/* 遍历所有活动顶点，若有需要边缘化的顶点，那么设定舒尔补为true */
+		for (OptimizableGraph::VertexContainer::const_iterator it = _optimizer->activeVertices().begin(); it != _optimizer->activeVertices().end(); ++it) {
+			OptimizableGraph::Vertex* v = *it;
+			if (v->marginalized()) {
+				useSchur = true;
+				break;
+			}
+		}
 
-  bool OptimizationAlgorithmWithHessian::computeMarginals(SparseBlockMatrix<MatrixX>& spinv, const std::vector<std::pair<int, int> >& blockIndices)
-  {
-    return _solver.computeMarginals(spinv, blockIndices);
-  }
+		/* 根据舒尔补的状态更新是否在线性求解器中使用舒尔补 */
+		if (useSchur)
+		{
+			if (_solver.supportsSchur())
+				_solver.setSchur(true);
+		}
+		else
+		{
+			if (_solver.supportsSchur())
+				_solver.setSchur(false);
+		}
 
-  bool OptimizationAlgorithmWithHessian::buildLinearStructure()
-  {
-    return _solver.buildStructure();
-  }
+		/* 初始化求解器并且返回求解器的初始化状态 */
+		bool initState = _solver.init(_optimizer, online);
+		return initState;
+	}
 
-  void OptimizationAlgorithmWithHessian::updateLinearSystem()
-  {
-    _solver.buildSystem();
-  }
+	bool OptimizationAlgorithmWithHessian::computeMarginals(SparseBlockMatrix<MatrixX>& spinv, const std::vector<std::pair<int, int> >& blockIndices)
+	{
+		return _solver.computeMarginals(spinv, blockIndices);
+	}
 
-  bool OptimizationAlgorithmWithHessian::updateStructure(const std::vector<HyperGraph::Vertex*>& vset, const HyperGraph::EdgeSet& edges)
-  {
-    return _solver.updateStructure(vset, edges);
-  }
+	bool OptimizationAlgorithmWithHessian::buildLinearStructure()
+	{
+		return _solver.buildStructure();
+	}
 
-  void OptimizationAlgorithmWithHessian::setWriteDebug(bool writeDebug)
-  {
-    _writeDebug->setValue(writeDebug);
-  }
+	void OptimizationAlgorithmWithHessian::updateLinearSystem()
+	{
+		_solver.buildSystem();
+	}
 
+	bool OptimizationAlgorithmWithHessian::updateStructure(const std::vector<HyperGraph::Vertex*>& vset, const HyperGraph::EdgeSet& edges)
+	{
+		return _solver.updateStructure(vset, edges);
+	}
+
+	void OptimizationAlgorithmWithHessian::setWriteDebug(bool writeDebug)
+	{
+		_writeDebug->setValue(writeDebug);
+	}
 } // end namespace

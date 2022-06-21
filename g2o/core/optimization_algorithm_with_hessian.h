@@ -1,4 +1,4 @@
-// g2o - General Graph Optimization
+﻿// g2o - General Graph Optimization
 // Copyright (C) 2011 R. Kuemmerle, G. Grisetti, W. Burgard
 // All rights reserved.
 //
@@ -32,41 +32,52 @@
 
 namespace g2o {
 
-  class Solver;
+	class Solver;
 
-  /**
-   * \brief Base for solvers operating on the approximated Hessian, e.g., Gauss-Newton, Levenberg
-   */
-  class G2O_CORE_API OptimizationAlgorithmWithHessian : public OptimizationAlgorithm
-  {
-    public:
-      explicit OptimizationAlgorithmWithHessian(Solver& solver);
-      virtual ~OptimizationAlgorithmWithHessian();
+	/*!
+	*  @brief Guass-Newton,Levenberg-Marquart,Dog-Leg策略实现基类
+	*/
+	class G2O_CORE_API OptimizationAlgorithmWithHessian : public OptimizationAlgorithm
+	{
+	public:
+		/*!
+		*  @brief 显式构造函数，使用已定义的求解器对该类进行初始化
+		*  @param[in]	solver	求解器类型
+		*/
+		explicit OptimizationAlgorithmWithHessian(Solver& solver);
 
-      virtual bool init(bool online = false);
+		/*!
+		*  @brief 默认析构函数
+		*/
+		virtual ~OptimizationAlgorithmWithHessian();
 
-      virtual bool computeMarginals(SparseBlockMatrix<MatrixX>& spinv, const std::vector<std::pair<int, int> >& blockIndices);
+		virtual bool init(bool online = false);
 
-      virtual bool buildLinearStructure();
+		virtual bool computeMarginals(SparseBlockMatrix<MatrixX>& spinv, const std::vector<std::pair<int, int> >& blockIndices);
 
-      virtual void updateLinearSystem();
+		virtual bool buildLinearStructure();
 
-      virtual bool updateStructure(const std::vector<HyperGraph::Vertex*>& vset, const HyperGraph::EdgeSet& edges);
+		virtual void updateLinearSystem();
 
-      //! return the underlying solver used to solve the linear system
-      Solver& solver() { return _solver;}
+		virtual bool updateStructure(const std::vector<HyperGraph::Vertex*>& vset, const HyperGraph::EdgeSet& edges);
 
-      /**
-       * write debug output of the Hessian if system is not positive definite
-       */
-      virtual void setWriteDebug(bool writeDebug);
-      virtual bool writeDebug() const { return _writeDebug->value();}
+		/*!
+		*  @brief 获取底层中用于实现线性方程求解的求解器
+		*/
+		Solver& solver() { return _solver; }
 
-    protected:
-      Solver& _solver;
-      Property<bool>* _writeDebug;
+		/**
+		 * write debug output of the Hessian if system is not positive definite
+		 */
+		virtual void setWriteDebug(bool writeDebug);
+		virtual bool writeDebug() const { return _writeDebug->value(); }
 
-  };
+	protected:
+		/*!< @brief 当前使用的线性求解器 */
+		Solver& _solver;
+		Property<bool>* _writeDebug;
+
+	};
 
 }// end namespace
 

@@ -1,4 +1,4 @@
-// g2o - General Graph Optimization
+﻿// g2o - General Graph Optimization
 // Copyright (C) 2011 R. Kuemmerle, G. Grisetti, W. Burgard
 // All rights reserved.
 //
@@ -34,61 +34,98 @@
 
 namespace g2o {
 
-  /**
-   * \brief Implementation of the Levenberg Algorithm
-   */
-  class G2O_CORE_API OptimizationAlgorithmLevenberg : public OptimizationAlgorithmWithHessian
-  {
-    public:
-      /**
-       * construct the Levenberg algorithm, which will use the given Solver for solving the
-       * linearized system.
-       */
-      explicit OptimizationAlgorithmLevenberg(std::unique_ptr<Solver> solver);
-      virtual ~OptimizationAlgorithmLevenberg();
+	/*!
+	*  @brief Levenberg_Marquart策略实现类
+	*/
+	class G2O_CORE_API OptimizationAlgorithmLevenberg : public OptimizationAlgorithmWithHessian
+	{
+	public:
+		/*!
+		*  @brief 使用指定的求解器初始化Levenberg_Marquart
+		*  @param[in]	solver	用户指定的求解器
+		*/
+		explicit OptimizationAlgorithmLevenberg(std::unique_ptr<Solver> solver);
 
-      virtual SolverResult solve(int iteration, bool online = false);
+		/*!
+		*  @brief 默认析构函数
+		*/
+		virtual ~OptimizationAlgorithmLevenberg();
 
-      virtual void printVerbose(std::ostream& os) const;
+		virtual SolverResult solve(int iteration, bool online = false);
 
-      //! return the currently used damping factor
-      number_t currentLambda() const { return _currentLambda;}
+		/*!
+		*  @brief 打印LM算法中的调试信息
+		*  @param[in]	os	输出流
+		*/
+		virtual void printVerbose(std::ostream& os) const;
 
-      //! the number of internal iteration if an update step increases chi^2 within Levenberg-Marquardt
-      void setMaxTrialsAfterFailure(int max_trials);
+		/*!
+		*  @brief 获取当前迭代步骤的阻尼因子lambda
+		*  @return	number_t	当前阻尼因子
+		*/
+		number_t currentLambda() const { return _currentLambda; }
 
-      //! get the number of inner iterations for Levenberg-Marquardt
-      int maxTrialsAfterFailure() const { return _maxTrialsAfterFailure->value();}
+		/*!
+		*  @brief 设置一次迭代中连续使得chi2上升的最大次数
+		*  @param[in]	max_trials	最大尝试次数
+		*/
+		void setMaxTrialsAfterFailure(int max_trials);
 
-      //! return the lambda set by the user, if < 0 the SparseOptimizer will compute the initial lambda
-      number_t userLambdaInit() {return _userLambdaInit->value();}
-      //! specify the initial lambda used for the first iteraion, if not given the SparseOptimizer tries to compute a suitable value
-      void setUserLambdaInit(number_t lambda);
+		/*!
+		*  @brief 获取一次迭代中连续使得chi2上升的最大次数
+		*  @return	max_trials	最大尝试次数
+		*/
+		int maxTrialsAfterFailure() const { return _maxTrialsAfterFailure->value(); }
 
-      //! return the number of levenberg iterations performed in the last round
-      int levenbergIteration() { return _levenbergIterations;}
+		/*!
+		*  @brief 返回用户设定的初始阻尼因子
+		*  @detail 若用户设定的初始阻尼因子小于0，那么算法内部将自动计算一个合理的初始值
+		*  @param[in]	lambda	初始阻尼因子值
+		*/
+		number_t userLambdaInit() { return _userLambdaInit->value(); }
 
-    protected:
-      // Levenberg parameters
-      Property<int>* _maxTrialsAfterFailure;
-      Property<number_t>* _userLambdaInit;
-      number_t _currentLambda;
-      number_t _tau;
-      number_t _goodStepLowerScale; ///< lower bound for lambda decrease if a good LM step
-      number_t _goodStepUpperScale; ///< upper bound for lambda decrease if a good LM step
-      number_t _ni;
-      int _levenbergIterations;   ///< the numer of levenberg iterations performed to accept the last step
+		/*!
+		*  @brief 用户设定初始的阻尼因子接口
+		*  @detail 若用户并没有调用该接口，那么算法内部将自动计算一个合理的初始值
+		*  @param[in]	lambda	初始阻尼因子值
+		*/
+		void setUserLambdaInit(number_t lambda);
 
-      /**
-       * helper for Levenberg, this function computes the initial damping factor, if the user did not
-       * specify an own value, see setUserLambdaInit()
-       */
-      number_t computeLambdaInit() const;
-      number_t computeScale() const;
+		/*!
+		*  @brief 获取Levenberg-Marquart方法的迭代次数
+		*  @return	int	LM策略迭代次数
+		*/
+		int levenbergIteration() { return _levenbergIterations; }
 
-  private:
-      std::unique_ptr<Solver> m_solver;
-  };
+	protected:
+		/*!< @brief 一次迭代中使chi2下降的最大尝试次数 */
+		Property<int>* _maxTrialsAfterFailure;
+		/*!< @brief 用户设定的初始阻尼因子值 */
+		Property<number_t>* _userLambdaInit;
+		/*!< @brief 当前迭代过程阻尼因子值 */
+		number_t _currentLambda;
+		/*!< @brief 阻尼因子控制参数 */
+		number_t _tau;
+		/*!< @brief lower bound for lambda decrease if a good LM step */
+		number_t _goodStepLowerScale;
+		/*!< @brief upper bound for lambda decrease if a good LM step */
+		number_t _goodStepUpperScale;
+		/*!< @brief 阻尼因子控制参数 */
+		number_t _ni;
+		/*!< @brief LM策略迭代次数 */
+		int _levenbergIterations;
+
+		/*!
+		*  @brief 算法内部用于计算初始阻尼因子的接口
+		*  @detail 若用户并没有调用该接口，那么算法内部将自动计算一个合理的初始值
+		*  @return	number_t	初始阻尼因子值
+		*/
+		number_t computeLambdaInit() const;
+		number_t computeScale() const;
+
+	private:
+		std::unique_ptr<Solver> m_solver;
+	};
 
 } // end namespace
 

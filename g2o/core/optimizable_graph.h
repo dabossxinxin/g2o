@@ -622,7 +622,7 @@ namespace g2o {
 		/**
 		 * verify that all the information of the edges are semi positive definite, i.e.,
 		 * all Eigenvalues are >= 0.
-		 * @param verbose output edges with not PSD information matrix on cerr
+		 * @param verbose output edges with not PSD(positive semi definite) information matrix on cerr
 		 * @return true if all edges have PSD information matrix
 		 */
 		bool verifyInformationMatrices(bool verbose = false) const;
