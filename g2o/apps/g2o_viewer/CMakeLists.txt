@@ -1,12 +1,19 @@
-# Qt5 was been find_package'd() by FindQGLViewer.cmake
+﻿# Qt5 was been find_package'd() by FindQGLViewer.cmake
 if(Qt5_FOUND)
-  QT5_WRAP_UI(UI_HEADERS base_main_window.ui base_properties_widget.ui)
+
+  file(GLOB UI_FILES "./*.ui")
+  #message("g2o_viewer_ui_files: " ${UI_FILES})
+  
+  QT5_WRAP_UI(UI_HEADERS ${UI_FILES})
   QT5_WRAP_CPP(UI_SOURCES main_window.h properties_widget.h)
 
   include_directories(${Qt5Core_INCLUDE_DIRS} ${Qt5Xml_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})
   string(APPEND qt5_includes_dirs "${Qt5Core_INCLUDE_DIRS} ${Qt5Xml_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS}")
   set(MY_QT_LIBRARIES ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Xml_LIBRARIES} ${Qt5OpenGL_LIBRARIES})
 endif()
+
+source_group("UI Files" FILES ${UI_FILES} ${UI_HEADERS})
+source_group("MOC Files" FILES ${UI_SOURCES})
 
 include_directories(${QGLVIEWER_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
