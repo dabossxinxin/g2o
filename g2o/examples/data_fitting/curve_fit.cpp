@@ -124,9 +124,9 @@ int main(int argc, char** argv)
 	std::vector<int> gaugeList;
 	string dumpFilename;
 	g2o::CommandArgs arg;
-	arg.param("dump", dumpFilename, "", "dump the points into a file");
+	arg.param("dump", dumpFilename, "./curve_point.txt", "dump the points into a file");
 	arg.param("numPoints", numPoints, 10000, "number of points sampled from the curve");
-	arg.param("i", maxIterations, 8, "perform n iterations");
+	arg.param("i", maxIterations, 100, "perform n iterations");
 	arg.param("v", verbose, true, "verbose output of the optimization process");
 
 	arg.parseArgs(argc, argv);

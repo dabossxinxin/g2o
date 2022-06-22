@@ -94,6 +94,7 @@ namespace g2o {
 
 		//! return x, the solution vector
 		number_t* x() { return _x; }
+		number_t x_norm() { return _x_norm; }
 		const number_t* x() const { return _x; }
 		//! return b, the right hand side of the system
 		number_t* b() { return _b; }
@@ -135,6 +136,7 @@ namespace g2o {
 	protected:
 		SparseOptimizer* _optimizer;
 		number_t* _x;
+		number_t _x_norm;
 		number_t* _b;
 		size_t _xSize, _maxXSize;
 		bool _isLevenberg; ///< the system we gonna solve is a Levenberg-Marquardt system

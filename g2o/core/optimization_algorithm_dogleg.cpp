@@ -1,4 +1,4 @@
-// g2o - General Graph Optimization
+ï»¿// g2o - General Graph Optimization
 // Copyright (C) 2011 R. Kuemmerle, G. Grisetti, W. Burgard
 // All rights reserved.
 //
@@ -56,7 +56,7 @@ namespace g2o {
 
 	OptimizationAlgorithm::SolverResult OptimizationAlgorithmDogleg::solve(int iteration, bool online)
 	{
-		/* ¼ì²é³ÉÔ±±äÁ¿_optimizerµÄºÏ·¨ĞÔ */
+		/* æ£€æŸ¥æˆå‘˜å˜é‡_optimizerçš„åˆæ³•æ€§ */
 		assert(_optimizer && "_optimizer not set");
 		assert(_solver.optimizer() == _optimizer && "underlying linear solver operates on different graph");
 
@@ -70,7 +70,7 @@ namespace g2o {
 				return OptimizationAlgorithm::Fail;
 			}
 
-			/* Ê¹ÓÃµ±Ç°Çó½âÆ÷ÖĞµÄ³ÉÔ±Î¬¶È³õÊ¼»¯µ±Ç°ÀàÖĞµÄ³ÉÔ± */
+			/* ä½¿ç”¨å½“å‰æ±‚è§£å™¨ä¸­çš„æˆå‘˜ç»´åº¦åˆå§‹åŒ–å½“å‰ç±»ä¸­çš„æˆå‘˜ */
 			_hsd.resize(_solver.vectorSize());
 			_hdl.resize(_solver.vectorSize());
 			_auxVector.resize(_solver.vectorSize());
@@ -79,7 +79,7 @@ namespace g2o {
 			_wasPDInAllIterations = true;
 		}
 
-		/* ¼ÆËãÂ³°ôºËº¯Êı¼Ó³ÖÏÂµ±Ç°µü´ú×ÜÌåchi2 */
+		/* è®¡ç®—é²æ£’æ ¸å‡½æ•°åŠ æŒä¸‹å½“å‰è¿­ä»£æ€»ä½“chi2 */
 		number_t t = get_monotonic_time();
 		_optimizer->computeActiveErrors();
 		G2OBatchStatistics* globalStats = G2OBatchStatistics::globalStats();
@@ -89,7 +89,7 @@ namespace g2o {
 		}
 		number_t currentChi = _optimizer->activeRobustChi2();
 
-		/* ¹¹Ôìµ±Ç°µü´úµÄÏßĞÔ·½³Ì */
+		/* æ„é€ å½“å‰è¿­ä»£çš„çº¿æ€§æ–¹ç¨‹ */
 		_solver.buildSystem();
 		if (globalStats) {
 			globalStats->timeQuadraticForm = get_monotonic_time() - t;
@@ -97,13 +97,13 @@ namespace g2o {
 
 		VectorX::ConstMapType b(_solver.b(), _solver.vectorSize());
 
-		/* ¼ÆËãalpha */
+		/* è®¡ç®—alpha */
 		_auxVector.setZero();
 		blockSolver.multiplyHessian(_auxVector.data(), _solver.b());
 		number_t bNormSquared = b.squaredNorm();
 		number_t alpha = bNormSquared / _auxVector.dot(b);
 
-		/* ¼ÆËã×îËÙÏÂ½µ²½³¤ */
+		/* è®¡ç®—æœ€é€Ÿä¸‹é™æ­¥é•¿ */
 		_hsd = alpha * b;
 		number_t hsdNorm = _hsd.norm();
 
@@ -218,7 +218,8 @@ namespace g2o {
 		os
 			<< "\t Delta= " << _delta
 			<< "\t step= " << stepType2Str(_lastStep)
-			<< "\t tries= " << _lastNumTries;
+			<< "\t tries= " << _lastNumTries
+			<< "\t delta_x= " << _solver.x_norm();
 		if (!_wasPDInAllIterations)
 			os << "\t lambda= " << _currentLambda;
 	}

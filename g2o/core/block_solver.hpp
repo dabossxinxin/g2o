@@ -334,6 +334,9 @@ namespace g2o {
 				globalStats->timeLinearSolver = get_monotonic_time() - t;
 				globalStats->hessianDimension = globalStats->hessianPoseDimension = _Hpp->cols();
 			}
+			for (int it = 0; it < _xSize; ++it)
+				_x_norm += _x[it] * _x[it];
+			_x_norm = sqrt(_x_norm);
 			return ok;
 		}
 
@@ -428,6 +431,11 @@ namespace g2o {
 
 		if (!solvedPoses)
 			return false;
+
+		/* 计算当前迭代步骤的步长 */
+		for (int it = 0; it < _xSize; ++it)
+			_x_norm += _x[it] * _x[it];
+		_x_norm = sqrt(_x_norm);
 
 		// _x contains the solution for the poses, now applying it to the landmarks to get the new part of the
 		// solution;

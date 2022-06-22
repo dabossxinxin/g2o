@@ -87,7 +87,7 @@ namespace g2o {
 			globalStats->timeQuadraticForm = get_monotonic_time() - t;
 		}
 
-		/* 计算初始阻尼因子 */
+		/* 初次迭代时计算初始阻尼因子 */
 		if (iteration == 0) {
 			_currentLambda = computeLambdaInit();
 			_ni = 2;
@@ -199,7 +199,8 @@ namespace g2o {
 		os
 			<< "\t schur= " << _solver.schur()
 			<< "\t lambda= " << FIXED(_currentLambda)
-			<< "\t levenbergIter= " << _levenbergIterations;
+			<< "\t levenbergIter= " << _levenbergIterations
+			<< "\t delta_x= " << _solver.x_norm();
 	}
 
 } // end namespace
