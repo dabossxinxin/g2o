@@ -1,4 +1,4 @@
-/*
+﻿/*
  * freeglut_stroke_roman.c
  *
  * freeglut Roman stroke font definition

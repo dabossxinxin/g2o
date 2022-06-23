@@ -1,4 +1,4 @@
-// -*-C++-*-
+﻿// -*-C++-*-
 // FlexLexer.h -- define interfaces for lexical analyzer classes generated
 // by flex
 

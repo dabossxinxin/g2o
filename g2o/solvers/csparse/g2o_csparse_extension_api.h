@@ -1,4 +1,4 @@
-// g2o - General Graph Optimization
+﻿// g2o - General Graph Optimization
 // Copyright (C) 2012 Rainer Kuemmerle
 // 
 // g2o is free software: you can redistribute it and/or modify

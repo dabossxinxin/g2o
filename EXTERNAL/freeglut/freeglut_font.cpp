@@ -1,4 +1,4 @@
-/*
+﻿/*
  * freeglut_font.c
  *
  * Bitmap and stroke fonts displaying.

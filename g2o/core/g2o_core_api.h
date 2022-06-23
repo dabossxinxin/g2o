@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *  Description: import/export macros for creating DLLS with Microsoft
  *	compiler. Any exported function needs to be declared with the
  *  appropriate G2O_XXXX_API macro. Also, there must be separate macros

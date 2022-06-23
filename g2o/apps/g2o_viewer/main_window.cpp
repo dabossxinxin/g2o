@@ -163,7 +163,8 @@ void MainWindow::on_btnReload_clicked()
 
 void MainWindow::on_btnResetCam_clicked()
 {
-
+	viewer->resetCam();
+	viewer->update();
 }
 
 void MainWindow::fixGraph()

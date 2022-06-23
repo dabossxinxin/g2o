@@ -1,4 +1,4 @@
-#ifndef G2O_CONTINUOUS_TO_DISCRETE_H_
+﻿#ifndef G2O_CONTINUOUS_TO_DISCRETE_H_
 #define G2O_CONTINUOUS_TO_DISCRETE_H_
 
 #include <unsupported/Eigen/MatrixFunctions>

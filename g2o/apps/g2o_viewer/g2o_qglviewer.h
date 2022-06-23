@@ -38,6 +38,8 @@ namespace g2o {
 		void draw();
 		void init();
 
+		void resetCam();
+
 		/**
 		 * the viewer uses a display list to cache the drawing, use setUpdateDisplay() to force
 		 * the creation of an updated display list.

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2005, 2006, 2007
  * Nick Galbreath -- nickg [at] modp [dot] com
  * All rights reserved.

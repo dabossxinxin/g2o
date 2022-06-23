@@ -1,4 +1,4 @@
-#ifndef G2O_TARGET_TYPES_6D_HPP_
+﻿#ifndef G2O_TARGET_TYPES_6D_HPP_
 #define G2O_TARGET_TYPES_6D_HPP_
 
 #include <g2o/core/base_vertex.h>

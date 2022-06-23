@@ -123,7 +123,7 @@ namespace g2o {
 	{
 		QGLViewer::init();
 		//glDisable(GL_LIGHT0);
-	   //glDisable(GL_LIGHTING);
+	    glDisable(GL_LIGHTING);
 
 		setBackgroundColor(QColor::fromRgb(255, 255, 255));
 
@@ -165,6 +165,15 @@ namespace g2o {
 
 		// getting a display list
 		_drawList = glGenLists(1);
+	}
+
+	void G2oQGLViewer::resetCam()
+	{
+		qglviewer::Camera* cam = new StandardCamera();
+		setCamera(cam);
+		cam->setPosition(qglviewer::Vec(0., 0., 75.));
+		cam->setUpVector(qglviewer::Vec(0., 1., 0.));
+		cam->lookAt(qglviewer::Vec(0., 0., 0.));
 	}
 
 	void G2oQGLViewer::setUpdateDisplay(bool updateDisplay)
