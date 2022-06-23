@@ -181,6 +181,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>ResetCam</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="btnSetZero">
          <property name="text">
           <string>SetZero</string>
@@ -264,7 +271,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -312,11 +319,17 @@
    </property>
   </action>
   <action name="actionWhite_Background">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>White Background</string>
    </property>
   </action>
   <action name="actionDefault_Background">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Default Background</string>
    </property>

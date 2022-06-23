@@ -38,8 +38,8 @@
 using namespace std;
 using namespace g2o;
 
-MainWindow::MainWindow(QWidget * parent, Qt::WindowFlags flags) :
-	QMainWindow(parent, flags),
+MainWindow::MainWindow(QWidget * parent/*, Qt::WindowFlags flags*/) :
+	QMainWindow(parent/*, flags*/),
 	_lastSolver(-1), _currentSolver(0), _viewerPropertiesWidget(0), _optimizerPropertiesWidget(0),
 	_filename("")
 {
@@ -47,6 +47,7 @@ MainWindow::MainWindow(QWidget * parent, Qt::WindowFlags flags) :
 	leKernelWidth->setValidator(new QDoubleValidator(-numeric_limits<double>::max(), numeric_limits<double>::max(), 7, this));
 	plainTextEdit->setMaximumBlockCount(1000);
 	btnForceStop->hide();
+	this->setAutoFillBackground(true);
 	QObject::connect(cbDrawAxis, SIGNAL(toggled(bool)), viewer, SLOT(setAxisIsDrawn(bool)));
 }
 
@@ -157,6 +158,11 @@ void MainWindow::on_btnReload_clicked()
 		viewer->setUpdateDisplay(true);
 		viewer->update();
 	}
+}
+
+void MainWindow::on_btnResetCam_clicked()
+{
+
 }
 
 void MainWindow::fixGraph()

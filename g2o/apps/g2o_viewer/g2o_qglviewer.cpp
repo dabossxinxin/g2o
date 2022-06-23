@@ -1,4 +1,4 @@
-// g2o - General Graph Optimization
+﻿// g2o - General Graph Optimization
 // Copyright (C) 2011 R. Kuemmerle, G. Grisetti, W. Burgard
 //
 // This file is part of g2o.
@@ -48,129 +48,128 @@ using namespace std;
 
 namespace g2o {
 
-namespace {
+	namespace {
 
-  /**
-   * \brief helper for setting up a camera for qglviewer
-   */
-  class StandardCamera : public qglviewer::Camera
-  {
-    public:
-      StandardCamera() : _standard(true) {};
+		/**
+		 * \brief helper for setting up a camera for qglviewer
+		 */
+		class StandardCamera : public qglviewer::Camera
+		{
+		public:
+			StandardCamera() : _standard(true) {};
 
-      qglv_real zNear() const {
-        if (_standard) 
-          return qglv_real(0.001);
-        else 
-          return Camera::zNear(); 
-      }
+			qglv_real zNear() const {
+				if (_standard)
+					return qglv_real(0.001);
+				else
+					return Camera::zNear();
+			}
 
-      qglv_real zFar() const
-      {  
-        if (_standard) 
-          return qglv_real(10000.0);
-        else 
-          return Camera::zFar();
-      }
+			qglv_real zFar() const
+			{
+				if (_standard)
+					return qglv_real(10000.0);
+				else
+					return Camera::zFar();
+			}
 
-      bool standard() const {return _standard;}
-      void setStandard(bool s) { _standard = s;}
+			bool standard() const { return _standard; }
+			void setStandard(bool s) { _standard = s; }
 
-    private:
-      bool _standard;
-  };
+		private:
+			bool _standard;
+		};
 
-} // end anonymous namespace
+	} // end anonymous namespace
 
-G2oQGLViewer::G2oQGLViewer(QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags flags) :
-  QGLViewer(parent, shareWidget, flags),
-  graph(0), _drawActions(0), _drawList(0)
-{
-  setAxisIsDrawn(false);
-  _drawActionParameters = new DrawAction::Parameters();
-}
+	G2oQGLViewer::G2oQGLViewer(QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags flags) :
+		QGLViewer(parent, shareWidget, flags),
+		graph(0), _drawActions(0), _drawList(0)
+	{
+		setAxisIsDrawn(false);
+		_drawActionParameters = new DrawAction::Parameters();
+	}
 
-G2oQGLViewer::~G2oQGLViewer()
-{
-  delete _drawActionParameters;
-  glDeleteLists(_drawList, 1);
-}
+	G2oQGLViewer::~G2oQGLViewer()
+	{
+		delete _drawActionParameters;
+		glDeleteLists(_drawList, 1);
+	}
 
-void G2oQGLViewer::draw()
-{
-  if (! graph)
-    return;
+	void G2oQGLViewer::draw()
+	{
+		if (!graph)
+			return;
 
-  if (_drawActions == 0) {
-    _drawActions = HyperGraphActionLibrary::instance()->actionByName("draw");
-    assert(_drawActions);
-  }
-  
-  if (! _drawActions) // avoid segmentation fault in release build
-    return;
-  if (_updateDisplay) {
-    _updateDisplay = false;
-    glNewList(_drawList, GL_COMPILE_AND_EXECUTE);
-    applyAction(graph, _drawActions, _drawActionParameters);
-    glEndList();
-  } else {
-    glCallList(_drawList); 
-  }
-}
+		if (_drawActions == 0) {
+			_drawActions = HyperGraphActionLibrary::instance()->actionByName("draw");
+			assert(_drawActions);
+		}
 
-void G2oQGLViewer::init()
-{
-  QGLViewer::init();
-  //glDisable(GL_LIGHT0);
- //glDisable(GL_LIGHTING);
+		if (!_drawActions) // avoid segmentation fault in release build
+			return;
+		if (_updateDisplay) {
+			_updateDisplay = false;
+			glNewList(_drawList, GL_COMPILE_AND_EXECUTE);
+			applyAction(graph, _drawActions, _drawActionParameters);
+			glEndList();
+		}
+		else {
+			glCallList(_drawList);
+		}
+	}
 
-  setBackgroundColor(QColor::fromRgb(51, 51, 51));
+	void G2oQGLViewer::init()
+	{
+		QGLViewer::init();
+		//glDisable(GL_LIGHT0);
+	   //glDisable(GL_LIGHTING);
 
-  // some default settings i like
-  glEnable(GL_LINE_SMOOTH);
-  glEnable(GL_BLEND); 
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_NORMALIZE);
-  //glEnable(GL_CULL_FACE);
-  glShadeModel(GL_FLAT);
-  //glShadeModel(GL_SMOOTH);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		setBackgroundColor(QColor::fromRgb(255, 255, 255));
 
-  setAxisIsDrawn();
+		// some default settings i like
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_NORMALIZE);
+		//glEnable(GL_CULL_FACE);
+		glShadeModel(GL_FLAT);
+		//glShadeModel(GL_SMOOTH);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  // don't save state
-  setStateFileName(QString::null);
+		setAxisIsDrawn();
 
-  // mouse bindings
+		// don't save state
+		setStateFileName(QString::null);
+
+		/* 绑定鼠标 */
 #ifdef QGLVIEWER_DEPRECATED_MOUSEBINDING
-  setMouseBinding(Qt::NoModifier, Qt::RightButton, CAMERA, TRANSLATE);
-  setMouseBinding(Qt::NoModifier, Qt::MidButton, CAMERA, TRANSLATE);
+		setMouseBinding(Qt::NoModifier, Qt::RightButton, CAMERA, TRANSLATE);
+		setMouseBinding(Qt::NoModifier, Qt::MidButton, CAMERA, TRANSLATE);
 #else
-  setMouseBinding(Qt::RightButton, CAMERA, TRANSLATE);
-  setMouseBinding(Qt::MidButton, CAMERA, TRANSLATE);
+		setMouseBinding(Qt::RightButton, CAMERA, TRANSLATE);
+		setMouseBinding(Qt::MidButton, CAMERA, TRANSLATE);
 #endif
 
-  // keyboard shortcuts
-  setShortcut(CAMERA_MODE, 0);
-  setShortcut(EXIT_VIEWER, 0);
-  //setShortcut(SAVE_SCREENSHOT, 0);
+		/* 设置键盘快捷键 */
+		setShortcut(CAMERA_MODE, 0);
+		setShortcut(EXIT_VIEWER, 0);
+		//setShortcut(SAVE_SCREENSHOT, 0);
 
-  // replace camera
-  qglviewer::Camera* oldcam = camera();
-  qglviewer::Camera* cam = new StandardCamera();
-  setCamera(cam);
-  cam->setPosition(qglviewer::Vec(0., 0., 75.));
-  cam->setUpVector(qglviewer::Vec(0., 1., 0.));
-  cam->lookAt(qglviewer::Vec(0., 0., 0.));
-  delete oldcam;
+		// replace camera
+		qglviewer::Camera* cam = new StandardCamera();
+		setCamera(cam);
+		cam->setPosition(qglviewer::Vec(0., 0., 75.));
+		cam->setUpVector(qglviewer::Vec(0., 1., 0.));
+		cam->lookAt(qglviewer::Vec(0., 0., 0.));
 
-  // getting a display list
-  _drawList = glGenLists(1);
-}
+		// getting a display list
+		_drawList = glGenLists(1);
+	}
 
-void G2oQGLViewer::setUpdateDisplay(bool updateDisplay)
-{
-  _updateDisplay = updateDisplay;
-}
+	void G2oQGLViewer::setUpdateDisplay(bool updateDisplay)
+	{
+		_updateDisplay = updateDisplay;
+	}
 
 } // end namespace

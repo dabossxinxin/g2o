@@ -1,4 +1,4 @@
-// g2o - General Graph Optimization
+﻿// g2o - General Graph Optimization
 // Copyright (C) 2011 R. Kuemmerle, G. Grisetti, W. Burgard
 //
 // This file is part of g2o.
@@ -25,37 +25,37 @@
 
 namespace g2o {
 
-  class SparseOptimizer;
+	class SparseOptimizer;
 
-  /**
-   * \brief OpenGL based viewer for the graph
-   */
-  class G2O_VIEWER_API G2oQGLViewer : public QGLViewer
-  {
-    public:
-      G2oQGLViewer(QWidget* parent=NULL, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
-      ~G2oQGLViewer();
-      void draw();
-      void init();
+	/**
+	 * \brief g2o中使用的OpenGL可视化工具
+	 */
+	class G2O_VIEWER_API G2oQGLViewer : public QGLViewer
+	{
+	public:
+		G2oQGLViewer(QWidget* parent = NULL, const QGLWidget* shareWidget = 0, Qt::WindowFlags flags = 0);
+		~G2oQGLViewer();
+		void draw();
+		void init();
 
-      /**
-       * the viewer uses a display list to cache the drawing, use setUpdateDisplay() to force
-       * the creation of an updated display list.
-       */
-      bool updateDisplay() const { return _updateDisplay;}
-      void setUpdateDisplay(bool updateDisplay);
+		/**
+		 * the viewer uses a display list to cache the drawing, use setUpdateDisplay() to force
+		 * the creation of an updated display list.
+		 */
+		bool updateDisplay() const { return _updateDisplay; }
+		void setUpdateDisplay(bool updateDisplay);
 
-      DrawAction::Parameters* parameters() { return _drawActionParameters;}
+		DrawAction::Parameters* parameters() { return _drawActionParameters; }
 
-    public:
-      SparseOptimizer* graph;
+	public:
+		SparseOptimizer* graph;
 
-    protected:
-      HyperGraphElementAction* _drawActions;
-      GLuint _drawList;
-      bool _updateDisplay;
-      DrawAction::Parameters* _drawActionParameters;
-  };
+	protected:
+		HyperGraphElementAction* _drawActions;
+		GLuint _drawList;
+		bool _updateDisplay;
+		DrawAction::Parameters* _drawActionParameters;
+	};
 
 } // end namespace
 

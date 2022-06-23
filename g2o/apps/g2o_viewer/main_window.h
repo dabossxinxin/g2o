@@ -1,4 +1,4 @@
-// g2o - General Graph Optimization
+﻿// g2o - General Graph Optimization
 // Copyright (C) 2011 R. Kuemmerle, G. Grisetti, W. Burgard
 //
 // This file is part of g2o.
@@ -30,8 +30,8 @@ class ViewerPropertiesWidget;
 class PropertiesWidget;
 
 namespace g2o {
-  class DlWrapper;
-  class OptimizationAlgorithm;
+	class DlWrapper;
+	class OptimizationAlgorithm;
 } // end namespace
 
 /**
@@ -39,61 +39,62 @@ namespace g2o {
  */
 class G2O_VIEWER_API MainWindow : public QMainWindow, public Ui::BaseMainWindow
 {
-  Q_OBJECT
-  public:
-    MainWindow(QWidget * parent = 0, Qt::WindowFlags flags = 0);
-    ~MainWindow();
+	Q_OBJECT
+public:
+	MainWindow(QWidget * parent = 0/*, Qt::WindowFlags flags = 0*/);
+	~MainWindow();
 
-  public:
-    /**
-     * list the available solvers in the GUI
-     */
-    void updateDisplayedSolvers();
+public:
+	/**
+	 * list the available solvers in the GUI
+	 */
+	void updateDisplayedSolvers();
 
-    /**
-     * list the available robust kernels in the GUI
-     */
-    void updateRobustKernels();
+	/**
+	 * list the available robust kernels in the GUI
+	 */
+	void updateRobustKernels();
 
-    /**
-     * load a graph on which we will operate from a file
-     */
-    bool loadFromFile(const QString& filename);
+	/**
+	 * load a graph on which we will operate from a file
+	 */
+	bool loadFromFile(const QString& filename);
 
-  public slots:
-    void on_actionLoad_triggered(bool);
-    void on_actionSave_triggered(bool);
-    void on_actionQuit_triggered(bool);
-    void on_actionWhite_Background_triggered(bool);
-    void on_actionDefault_Background_triggered(bool);
-    void on_actionProperties_triggered(bool);
-    void on_actionSave_Screenshot_triggered(bool);
-    void on_actionLoad_Viewer_State_triggered(bool);
-    void on_actionSave_Viewer_State_triggered(bool);
+	public slots:
+	void on_actionLoad_triggered(bool);
+	void on_actionSave_triggered(bool);
+	void on_actionQuit_triggered(bool);
+	void on_actionWhite_Background_triggered(bool);
+	void on_actionDefault_Background_triggered(bool);
+	void on_actionProperties_triggered(bool);
+	void on_actionSave_Screenshot_triggered(bool);
+	void on_actionLoad_Viewer_State_triggered(bool);
+	void on_actionSave_Viewer_State_triggered(bool);
 
-    void on_btnOptimize_clicked();
-    void on_btnInitialGuess_clicked();
-    void on_btnSetZero_clicked();
-    void on_btnForceStop_clicked();
-    void on_btnOptimizerParamaters_clicked();
-    void on_btnReload_clicked();
- 
-  protected:
-    void fixGraph();
-    bool allocateSolver(bool& allocatedNewSolver);
-    bool prepare();
-    void setRobustKernel();
-    bool load(const QString& filename);
+	void on_btnOptimize_clicked();
+	void on_btnInitialGuess_clicked();
+	void on_btnSetZero_clicked();
+	void on_btnForceStop_clicked();
+	void on_btnOptimizerParamaters_clicked();
+	void on_btnReload_clicked();
+	void on_btnResetCam_clicked();
 
-    std::vector<g2o::OptimizationAlgorithmProperty> _knownSolvers;
-    int _lastSolver;
-    bool _forceStopFlag;
-    g2o::OptimizationAlgorithmProperty _currentOptimizationAlgorithmProperty;
-    g2o::OptimizationAlgorithm* _currentSolver;
+protected:
+	void fixGraph();
+	bool allocateSolver(bool& allocatedNewSolver);
+	bool prepare();
+	void setRobustKernel();
+	bool load(const QString& filename);
 
-    ViewerPropertiesWidget* _viewerPropertiesWidget;
-    PropertiesWidget* _optimizerPropertiesWidget;
-    std::string _filename;
+	std::vector<g2o::OptimizationAlgorithmProperty> _knownSolvers;
+	int _lastSolver;
+	bool _forceStopFlag;
+	g2o::OptimizationAlgorithmProperty _currentOptimizationAlgorithmProperty;
+	g2o::OptimizationAlgorithm* _currentSolver;
+
+	ViewerPropertiesWidget* _viewerPropertiesWidget;
+	PropertiesWidget* _optimizerPropertiesWidget;
+	std::string _filename;
 };
 
 

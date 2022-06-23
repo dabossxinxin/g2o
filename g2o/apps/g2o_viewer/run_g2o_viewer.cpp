@@ -1,4 +1,4 @@
-// g2o - General Graph Optimization
+﻿// g2o - General Graph Optimization
 // Copyright (C) 2011 R. Kuemmerle, G. Grisetti, W. Burgard
 //
 // This file is part of g2o.
@@ -39,60 +39,60 @@
 
 namespace g2o {
 
-/**
- * \brief helper for calling usleep on any system using Qt
- */
-class SleepThread : public QThread
-{
-  public: // make the proctected methods publicly available
-    using QThread::msleep;
-    using QThread::usleep;
-};
+	/**
+	 * \brief helper for calling usleep on any system using Qt
+	 */
+	class SleepThread : public QThread
+	{
+	public: // make the proctected methods publicly available
+		using QThread::msleep;
+		using QThread::usleep;
+	};
 
-int RunG2OViewer::run(int argc, char** argv, CommandArgs& arg)
-{
-  std::string inputFilename;
-  std::string loadLookup;
-  arg.param("renameTypes", loadLookup, "", "create a lookup for loading types into other types,\n\t TAG_IN_FILE=INTERNAL_TAG_FOR_TYPE,TAG2=INTERNAL2\n\t e.g., VERTEX_CAM=VERTEX_SE3:EXPMAP");
-  arg.paramLeftOver("graph-input", inputFilename, "", "graph file which will be processed", true);
-  arg.parseArgs(argc, argv);
+	int RunG2OViewer::run(int argc, char** argv, CommandArgs& arg)
+	{
+		std::string inputFilename;
+		std::string loadLookup;
+		arg.param("renameTypes", loadLookup, "", "create a lookup for loading types into other types,\n\t TAG_IN_FILE=INTERNAL_TAG_FOR_TYPE,TAG2=INTERNAL2\n\t e.g., VERTEX_CAM=VERTEX_SE3:EXPMAP");
+		arg.paramLeftOver("graph-input", inputFilename, "F:\\Users\\Admin\\Desktop\\sphere.g2o", "graph file which will be processed", true);
+		arg.parseArgs(argc, argv);
 
-  MainWindow mw;
-  mw.updateDisplayedSolvers();
-  mw.updateRobustKernels();
-  mw.show();
+		MainWindow mw;
+		mw.updateDisplayedSolvers();
+		mw.updateRobustKernels();
+		mw.show();
 
-  // redirect the output that normally goes to cerr to the textedit in the viewer
-  StreamRedirect redirect(std::cerr, mw.plainTextEdit);
+		// redirect the output that normally goes to cerr to the textedit in the viewer
+		StreamRedirect redirect(std::cerr, mw.plainTextEdit);
 
-  // setting up the optimizer
-  SparseOptimizer* optimizer = new SparseOptimizer();
-  // Loading the input data
-  if (loadLookup.size() > 0) {
-    optimizer->setRenamedTypesFromString(loadLookup);
-  }
-  mw.viewer->graph = optimizer;
+		// setting up the optimizer
+		SparseOptimizer* optimizer = new SparseOptimizer();
+		// Loading the input data
+		if (loadLookup.size() > 0) {
+			optimizer->setRenamedTypesFromString(loadLookup);
+		}
+		mw.viewer->graph = optimizer;
 
-  // set up the GUI action
-  GuiHyperGraphAction guiHyperGraphAction;
-  guiHyperGraphAction.viewer = mw.viewer;
-  //optimizer->addPostIterationAction(&guiHyperGraphAction);
-  optimizer->addPreIterationAction(&guiHyperGraphAction);
+		// set up the GUI action
+		GuiHyperGraphAction guiHyperGraphAction;
+		guiHyperGraphAction.viewer = mw.viewer;
+		//optimizer->addPostIterationAction(&guiHyperGraphAction);
+		optimizer->addPreIterationAction(&guiHyperGraphAction);
 
-  if (inputFilename.size() > 0) {
-    mw.loadFromFile(QString::fromStdString(inputFilename));
-  }
+		if (inputFilename.size() > 0) {
+			mw.loadFromFile(QString::fromStdString(inputFilename));
+		}
 
-  QCoreApplication* myapp = QApplication::instance();
-  while (mw.isVisible()) {
-    guiHyperGraphAction.dumpScreenshots = mw.actionDump_Images->isChecked();
-    if (myapp)
-      myapp->processEvents();
-    SleepThread::msleep(10);
-  }
+		QCoreApplication* myapp = QApplication::instance();
+		while (mw.isVisible()) {
+			guiHyperGraphAction.dumpScreenshots = mw.actionDump_Images->isChecked();
+			if (myapp)
+				myapp->processEvents();
+			SleepThread::msleep(10);
+		}
 
-  delete optimizer;
-  return 0;
-}
+		delete optimizer;
+		return 0;
+	}
 
 } //end namespace
