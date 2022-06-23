@@ -27,6 +27,7 @@
 #include "g2o/core/robust_kernel_factory.h"
 #include "g2o/core/robust_kernel.h"
 
+#include <QWidget>
 #include <QFileDialog>
 #include <QStandardItemModel>
 #include <QDoubleValidator>

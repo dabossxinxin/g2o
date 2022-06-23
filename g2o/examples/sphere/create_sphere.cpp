@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 	std::vector<double> noiseRotation;
 	string outFilename;
 	CommandArgs arg;
-	arg.param("o", outFilename, "F:\\Users\\Admin\\Desktop\\sphere.g2o", "output filename");
+	arg.param("o", outFilename, "C:\\Users\\Administrator\\Desktop\\sphere.g2o", "output filename");
 	arg.param("nodesPerLevel", nodesPerLevel, 50, "how many nodes per lap on the sphere");
 	arg.param("laps", numLaps, 50, "how many times the robot travels around the sphere");
 	arg.param("radius", radius, 100., "radius of the sphere");

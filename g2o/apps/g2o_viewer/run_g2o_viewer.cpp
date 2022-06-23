@@ -94,5 +94,4 @@ namespace g2o {
 		delete optimizer;
 		return 0;
 	}
-
-} //end namespace
+}

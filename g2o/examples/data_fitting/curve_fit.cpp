@@ -157,7 +157,7 @@ int main(int argc, char** argv)
 
 	// setup the solver
 	g2o::SparseOptimizer optimizer;
-	optimizer.setVerbose(false);
+	optimizer.setVerbose(true);
 
 	g2o::OptimizationAlgorithmLevenberg* solver_lm = new g2o::OptimizationAlgorithmLevenberg(
 		g2o::make_unique<MyBlockSolver>(g2o::make_unique<MyLinearSolver>()));
