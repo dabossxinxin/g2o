@@ -36,37 +36,45 @@
 namespace g2o {
 	using namespace std;
 
-	EdgeSE3::EdgeSE3() : BaseBinaryEdge<6, Isometry3, VertexSE3, VertexSE3>() {
+	EdgeSE3::EdgeSE3() : BaseBinaryEdge<6, Isometry3, VertexSE3, VertexSE3>()
+	{
 		information().setIdentity();
 	}
 
-	bool EdgeSE3::read(std::istream& is) {
+	bool EdgeSE3::read(std::istream& is)
+	{
 		Vector7 meas;
 		for (int i = 0; i < 7; i++)
 			is >> meas[i];
-		// normalize the quaternion to recover numerical precision lost by storing as human readable text
+		/* 读取文件时，单位四元数会产生精度损失，此时重新单位化 */
 		Vector4::MapType(meas.data() + 3).normalize();
 		setMeasurement(internal::fromVectorQT(meas));
 
 		if (is.bad()) {
 			return false;
 		}
-		for (int i = 0; i < information().rows() && is.good(); i++)
+		/* 读取信息矩阵 */
+		for (int i = 0; i < information().rows() && is.good(); i++) {
 			for (int j = i; j < information().cols() && is.good(); j++) {
 				is >> information()(i, j);
 				if (i != j)
 					information()(j, i) = information()(i, j);
 			}
+		}
 		if (is.bad()) {
-			//  we overwrite the information matrix with the Identity
 			information().setIdentity();
 		}
 		return true;
 	}
 
-	bool EdgeSE3::write(std::ostream& os) const {
+	bool EdgeSE3::write(std::ostream& os) const
+	{
 		Vector7 meas = internal::toVectorQT(_measurement);
+
+		/* 写入位姿信息到指定的文件中 */
 		for (int i = 0; i < 7; i++) os << meas[i] << " ";
+
+		/* 写入信息矩阵到指定的文件中 */
 		for (int i = 0; i < information().rows(); i++)
 			for (int j = i; j < information().cols(); j++) {
 				os << information()(i, j) << " ";
@@ -74,7 +82,8 @@ namespace g2o {
 		return os.good();
 	}
 
-	void EdgeSE3::computeError() {
+	void EdgeSE3::computeError()
+	{
 		VertexSE3 *from = static_cast<VertexSE3*>(_vertices[0]);
 		VertexSE3 *to = static_cast<VertexSE3*>(_vertices[1]);
 		Isometry3 delta = _inverseMeasurement * from->estimate().inverse() * to->estimate();
@@ -89,29 +98,31 @@ namespace g2o {
 		return true;
 	}
 
-	void EdgeSE3::linearizeOplus() {
-
-		// BaseBinaryEdge<6, Isometry3, VertexSE3, VertexSE3>::linearizeOplus();
-		// return;
-
+	void EdgeSE3::linearizeOplus()
+	{
+		/* 获取与当前二元边相连的顶点信息 */
 		VertexSE3 *from = static_cast<VertexSE3*>(_vertices[0]);
 		VertexSE3 *to = static_cast<VertexSE3*>(_vertices[1]);
 		Isometry3 E;
 		const Isometry3& Xi = from->estimate();
 		const Isometry3& Xj = to->estimate();
 		const Isometry3& Z = _measurement;
+
+		/* 计算当前二元边相对于相连顶点的雅可比 */
 		internal::computeEdgeSE3Gradient(E, _jacobianOplusXi, _jacobianOplusXj, Z, Xi, Xj);
 	}
 
-	void EdgeSE3::initialEstimate(const OptimizableGraph::VertexSet& from_, OptimizableGraph::Vertex* /*to_*/) {
+	void EdgeSE3::initialEstimate(const OptimizableGraph::VertexSet& from_, OptimizableGraph::Vertex* /*to_*/)
+	{
 		VertexSE3 *from = static_cast<VertexSE3*>(_vertices[0]);
 		VertexSE3 *to = static_cast<VertexSE3*>(_vertices[1]);
 
 		if (from_.count(from) > 0) {
 			to->setEstimate(from->estimate() * _measurement);
 		}
-		else
+		else {
 			from->setEstimate(to->estimate() * _measurement.inverse());
+		}
 		//cerr << "IE" << endl;
 	}
 

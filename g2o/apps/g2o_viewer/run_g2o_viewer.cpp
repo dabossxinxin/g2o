@@ -54,7 +54,7 @@ namespace g2o {
 		std::string inputFilename;
 		std::string loadLookup;
 		arg.param("renameTypes", loadLookup, "", "create a lookup for loading types into other types,\n\t TAG_IN_FILE=INTERNAL_TAG_FOR_TYPE,TAG2=INTERNAL2\n\t e.g., VERTEX_CAM=VERTEX_SE3:EXPMAP");
-		arg.paramLeftOver("graph-input", inputFilename, "C:\\Users\\Administrator\\Desktop\\sphere.g2o", "graph file which will be processed", true);
+		arg.paramLeftOver("graph-input", inputFilename, "F:\\Users\\Admin\\Desktop\\sphere.g2o", "graph file which will be processed", true);
 		arg.parseArgs(argc, argv);
 
 		MainWindow mw;

@@ -34,50 +34,100 @@
 
 namespace g2o {
 
-	/**
-	 * \brief Edge between two 3D pose vertices
-	 *
-	 * The transformation between the two vertices is given as an Isometry3.
-	 * If z denotes the measurement, then the error function is given as follows:
-	 * z^-1 * (x_i^-1 * x_j)
-	 */
-	class G2O_TYPES_SLAM3D_API EdgeSE3 : public BaseBinaryEdge<6, Isometry3, VertexSE3, VertexSE3> {
+	/*!
+	*  @brief 两个位姿顶点之间的边，使用Eigen中的Isometry表示位姿变换
+	*  @detail 两个位姿顶点之间的位姿变换使用Isometry3形式表示
+	*          若使用z表示测量值吗，那么误差使用z^-1*(x_i^-1*x_j)表示
+	*/
+	class G2O_TYPES_SLAM3D_API EdgeSE3 : public BaseBinaryEdge<6, Isometry3, VertexSE3, VertexSE3>
+	{
 	public:
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+
+		/*!
+		*  @brief 默认构造函数
+		*/
 		EdgeSE3();
+
+		/*!
+		*  @brief 使用std中定义的输入流读取数据
+		*/
 		virtual bool read(std::istream& is);
+
+		/*!
+		*  @brief 使用std中定义的输出流读取数据
+		*/
 		virtual bool write(std::ostream& os) const;
 
+		/*!
+		*  @brief 计算当前边的残差
+		*/
 		void computeError();
 
-		virtual void setMeasurement(const Isometry3& m) {
+		/*!
+		*  @brief 设置当前边的测量值
+		*  @param[in]	m	当前边的测量值
+		*/
+		virtual void setMeasurement(const Isometry3& m)
+		{
 			_measurement = m;
 			_inverseMeasurement = m.inverse();
 		}
 
-		virtual bool setMeasurementData(const number_t* d) {
+		/*!
+		*  @brief 设置当前边的测量值
+		*  @param[in]	m		当前边的测量值的“四元数+平移”形式
+		*  @return		bool	是否成功设定当前边的测量值
+		*/
+		virtual bool setMeasurementData(const number_t* d)
+		{
 			Eigen::Map<const Vector7> v(d);
 			setMeasurement(internal::fromVectorQT(v));
 			return true;
 		}
 
-		virtual bool getMeasurementData(number_t* d) const {
+		/*!
+		*  @brief 获取当前边的测量值的“四元数+平移”形式
+		*  @param[in]	m		当前边的测量值的“四元数+平移”形式
+		*  @return		bool	是否成功获取当前边的测量值
+		*/
+		virtual bool getMeasurementData(number_t* d) const
+		{
 			Eigen::Map<Vector7> v(d);
 			v = internal::toVectorQT(_measurement);
 			return true;
 		}
 
+		/*!
+		*  @brief 计算当前边相对于各个相连顶点的雅克比
+		*/
 		void linearizeOplus();
 
-		virtual int measurementDimension() const { return 7; }
+		/*!
+		*  @brief 获取当前测量值的维度:"四元数+平移=7"
+		*/
+		virtual int measurementDimension() const
+		{
+			return 7;
+		}
 
+		/*!
+		*  @brief TODO
+		*/
 		virtual bool setMeasurementFromState();
 
+		/*!
+		*  @brief TODO
+		*/
 		virtual number_t initialEstimatePossible(const OptimizableGraph::VertexSet& /*from*/,
-			OptimizableGraph::Vertex* /*to*/) {
+			OptimizableGraph::Vertex* /*to*/)
+		{
 			return 1.;
 		}
 
+		/*!
+		*  @brief 初始化相连顶点参数估计值
+		*/
 		virtual void initialEstimate(const OptimizableGraph::VertexSet& from, OptimizableGraph::Vertex* to);
 
 	protected:
@@ -85,7 +135,7 @@ namespace g2o {
 	};
 
 	/**
-	 * \brief Output the pose-pose constraint to Gnuplot data file
+	 * \brief Pose-Pose constraint to Gnuplot data file
 	 */
 	class G2O_TYPES_SLAM3D_API EdgeSE3WriteGnuplotAction : public WriteGnuplotAction {
 	public:
