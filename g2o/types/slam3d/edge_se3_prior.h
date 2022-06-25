@@ -31,7 +31,12 @@
 #include "g2o/core/base_unary_edge.h"
 #include "parameter_se3_offset.h"
 #include "g2o_types_slam3d_api.h"
+
+#include "EXTERNAL/sophus/so3.hpp"
+#include "EXTERNAL/sophus/se3.hpp"
+
 namespace g2o {
+
   /**
    * \brief prior for an SE3 element
    *

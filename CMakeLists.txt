@@ -116,6 +116,7 @@ else()
 endif()
 
 option (G2O_USE_CSPARSE "Build g2o with CSParse support" ON)
+option (G2O_USE_SOPHUS "Build g2o with Sophus support" ON)
 
 find_package(CSparse)
 if (G2O_USE_CSPARSE)

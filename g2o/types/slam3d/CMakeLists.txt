@@ -37,6 +37,10 @@ add_library(types_slam3d ${G2O_LIB_TYPE}
   edge_pointxyz.cpp edge_pointxyz.h
   types_slam3d.cpp
   types_slam3d.h
+  edge_se3_lie_algebra.h
+  edge_se3_lie_algebra.cpp
+  vertex_se3_lie_algebra.h
+  vertex_se3_lie_algebra.cpp
 )
 
 
