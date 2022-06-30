@@ -12,7 +12,7 @@
 
 namespace g2o
 {
-	class G2O_TYPES_SLAM3D_API EdgeSE3LieAlgebra : public g2o::BaseBinaryEdge<6, Sophus::SE3d, VertexSE3LieAlgebra, VertexSE3LieAlgebra>
+	class G2O_TYPES_SLAM3D_API EdgeSE3LieAlgebra : public g2o::BaseBinaryEdge<6, Sophus::SE3, VertexSE3LieAlgebra, VertexSE3LieAlgebra>
 	{
 	public:
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
@@ -47,7 +47,7 @@ namespace g2o
 			return 7;
 		}
 
-		virtual bool setMeasurementFromState();
+		//virtual bool setMeasurementFromState();
 
 		virtual number_t initialEstimatePossible(const OptimizableGraph::VertexSet&,
 			OptimizableGraph::Vertex*)
@@ -55,7 +55,20 @@ namespace g2o
 			return 1.0;
 		}
 
-		virtual void initialEstimate(const OptimizableGraph::VertexSet& from, OptimizableGraph::Vertex* to);
+		//virtual void initialEstimate(const OptimizableGraph::VertexSet& from, OptimizableGraph::Vertex* to);
+
+		typedef Eigen::Matrix<double, 6, 6> Matrix6d;
+		inline Matrix6d JR_INV(Sophus::SE3 error_)
+		{
+			Matrix6d J;
+			J.block(0, 0, 3, 3) = Sophus::SO3::hat(error_.so3().log());
+			J.block(0, 3, 3, 3) = Sophus::SO3::hat(error_.translation());
+			J.block(3, 0, 3, 3) = Eigen::Matrix3d::Zero(3, 3);
+			J.block(3, 3, 3, 3) = Sophus::SO3::hat(error_.so3().log());
+			J = J*0.5 + Matrix6d::Identity();
+			return J;
+
+		}
 
 	protected:
 	};
@@ -63,21 +76,21 @@ namespace g2o
 	/**
 	* \brief Pose-Pose constraint to Gnuplot data file
 	*/
-	class G2O_TYPES_SLAM3D_API EdgeSE3LieAlgebraWriteGnuplotAction : public WriteGnuplotAction
+	/*class G2O_TYPES_SLAM3D_API EdgeSE3LieAlgebraWriteGnuplotAction : public WriteGnuplotAction
 	{
 	public:
 		EdgeSE3LieAlgebraWriteGnuplotAction();
 		virtual HyperGraphElementAction* operator()(HyperGraph::HyperGraphElement* element,
 			HyperGraphElementAction::Parameters* params_);
-	};
+	};*/
 
 #ifdef G2O_HAVE_OPENGL
-	class G2O_TYPES_SLAM3D_API EdgeSE3LieAlgebraDrawAction :pubilc DrawAction
+	/*class G2O_TYPES_SLAM3D_API EdgeSE3LieAlgebraDrawAction : public DrawAction
 	{
 	public:
 		EdgeSE3LieAlgebraDrawAction();
 		virtual HyperGraphElementAction* operator() (HyperGraph::HyperGraphElement* element,
 			HyperGraphElementAction::Parameters* params_);
-	};
+	};*/
 #endif
 }

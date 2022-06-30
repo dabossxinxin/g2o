@@ -1,11 +1,14 @@
-add_library(types_slam3d ${G2O_LIB_TYPE}
-  dquat2mat.cpp dquat2mat.h
+﻿add_library(types_slam3d ${G2O_LIB_TYPE}
+  dquat2mat.cpp 
+  dquat2mat.h
   isometry3d_mappings.h
   isometry3d_mappings.cpp
   isometry3d_gradients.cpp
   isometry3d_gradients.h
   vertex_se3.cpp
   vertex_se3.h
+  vertex_se3_lie_algebra.h
+  vertex_se3_lie_algebra.cpp
   parameter_se3_offset.cpp
   parameter_se3_offset.h
   edge_se3.cpp
@@ -32,15 +35,13 @@ add_library(types_slam3d ${G2O_LIB_TYPE}
   edge_se3_lotsofxyz.h
   edge_xyz_prior.cpp
   edge_xyz_prior.h
+  edge_se3_lie_algebra.h
+  edge_se3_lie_algebra.cpp
   se3quat.h
   se3_ops.h se3_ops.hpp
   edge_pointxyz.cpp edge_pointxyz.h
   types_slam3d.cpp
   types_slam3d.h
-  edge_se3_lie_algebra.h
-  edge_se3_lie_algebra.cpp
-  vertex_se3_lie_algebra.h
-  vertex_se3_lie_algebra.cpp
 )
 
 

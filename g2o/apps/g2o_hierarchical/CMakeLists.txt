@@ -1,4 +1,4 @@
-add_library(g2o_hierarchical_library ${G2O_LIB_TYPE}
+﻿add_library(g2o_hierarchical_library ${G2O_LIB_TYPE}
   edge_labeler.cpp
   edge_creator.cpp
   star.cpp
@@ -14,7 +14,6 @@ add_library(g2o_hierarchical_library ${G2O_LIB_TYPE}
   simple_star_ops.h
   g2o_hierarchical_api.h
 )
-
 
 set_target_properties(g2o_hierarchical_library PROPERTIES OUTPUT_NAME ${LIB_PREFIX}hierarchical)
 if (APPLE)
